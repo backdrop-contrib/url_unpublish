@@ -1,0 +1,5 @@
+;$Id$
+name = Url unpublish
+description = unpublish nodes through url parameter
+core = 6.x
+package = Other

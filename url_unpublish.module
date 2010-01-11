@@ -1,0 +1,22 @@
+<?php
+//$Id$
+function url_unpublish_menu(){
+  $items = array();
+
+  $items['url_unpublish/%node'] = array(
+    'title' => 'Unpublish Node',
+    'description' => 'Unpublish Node by Nid',
+    'page callback' => 'url_unpublish_node',
+    'page arguments' => array(1),
+    'access arguments' => array('administer nodes'),
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+function url_unpublish_node($node){
+    $node->status = 0;
+    node_save($node);
+    drupal_goto($_SERVER['HTTP_REFERER']);
+}
