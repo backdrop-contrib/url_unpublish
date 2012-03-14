@@ -1,21 +1,45 @@
 <?php
+//$Id$
 function url_unpublish_menu(){
   $items = array();
 
   $items['url_unpublish/%node'] = array(
     'title' => 'Unpublish Node',
     'description' => 'Unpublish Node by Nid',
-    'page callback' => 'url_unpublish_node',
+    'page callback' => 'url_unpublish_save_destination',
     'page arguments' => array(1),
-    'access arguments' => array('administer nodes'),
+    'access arguments' => array('unpublish nodes'),
     'type' => MENU_CALLBACK,
   );
 
   return $items;
 }
 
-function url_unpublish_node($node){
+function url_unpublish_perm() {
+  return array('unpublish nodes');
+}
+
+function url_unpublish_save_destination($node){
+    if(user_access('unpublish nodes')){
+    $_SESSION['url_unpublish_destination'] = $_SERVER['HTTP_REFERER'];
+    return drupal_get_form('url_unpublish_confirm', $node);
+    }
+    else{
+        drupal_access_denied();
+    }
+}
+
+function url_unpublish_confirm($form, $form_state, $node) {
+  $form['#node'] = $node;
+  return confirm_form($form, t('Are you sure you want to unpublish %node-title?', array('%node-title' => $node->title)), $_SESSION['url_unpublish_destination'], t('This action cannot be undone.'), t('Unpublish'), t('Cancel'));
+}
+
+function url_unpublish_confirm_submit($form, &$form_state) {
+  $node = $form['#node'];
+  if ($form_state['values']['confirm']) {
     $node->status = 0;
     node_save($node);
-    drupal_goto($_SERVER['HTTP_REFERER']);
+  }
+
+  drupal_goto('<front>');
 }
