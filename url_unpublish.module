@@ -1,15 +1,15 @@
 <?php
-//$Id$
-function url_unpublish_menu(){
+
+function url_unpublish_menu() {
   $items = array();
 
   $items['url_unpublish/%node'] = array(
-    'title' => 'Unpublish Node',
-    'description' => 'Unpublish Node by Nid',
-    'page callback' => 'url_unpublish_save_destination',
-    'page arguments' => array(1),
-    'access arguments' => array('unpublish nodes'),
-    'type' => MENU_CALLBACK,
+      'title' => 'Unpublish Node',
+      'description' => 'Unpublish Node by Nid',
+      'page callback' => 'url_unpublish_save_destination',
+      'page arguments' => array(1),
+      'access arguments' => array('unpublish nodes'),
+      'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -19,14 +19,14 @@ function url_unpublish_perm() {
   return array('unpublish nodes');
 }
 
-function url_unpublish_save_destination($node){
-    if(user_access('unpublish nodes')){
+function url_unpublish_save_destination($node) {
+  if (user_access('unpublish nodes')) {
     $_SESSION['url_unpublish_destination'] = $_SERVER['HTTP_REFERER'];
     return drupal_get_form('url_unpublish_confirm', $node);
-    }
-    else{
-        drupal_access_denied();
-    }
+  }
+  else {
+    drupal_access_denied();
+  }
 }
 
 function url_unpublish_confirm($form, $form_state, $node) {
