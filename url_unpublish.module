@@ -1,5 +1,8 @@
 <?php
 
+/**
+* Implements hook_menu().
+*/
 function url_unpublish_menu() {
   $items = array();
 
@@ -15,8 +18,11 @@ function url_unpublish_menu() {
   return $items;
 }
 
-function url_unpublish_perm() {
-  return array('unpublish nodes');
+/**
+* Implements hook_permission().
+*/
+function url_unpublish_permission() {
+  return array('unpublish nodes' => array('title' => 'Unpublish Nodes'));
 }
 
 function url_unpublish_save_destination($node) {
