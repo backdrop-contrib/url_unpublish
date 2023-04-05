@@ -21,6 +21,17 @@ function url_unpublish_views_data() {
       'handler' => 'views_handler_field_node_link_unpublish',
     ),
   );
+  $data['node']['publish_node']['moved to'] = array(
+    'views_entity_node',
+    'publish_node',
+  );
+  $data['views_entity_node']['publish_node'] = array(
+    'field' => array(
+      'title' => t('Publish link'),
+      'help' => t('Provide a simple link to publish the content.'),
+      'handler' => 'views_handler_field_node_link_publish',
+    ),
+  );
 
   return $data;
 }
@@ -35,6 +46,9 @@ function url_unpublish_views_handlers() {
     ),
     'handlers' => array(
       'views_handler_field_node_link_unpublish' => array(
+        'parent' => 'views_handler_field_node_link',
+      ),
+      'views_handler_field_node_link_publish' => array(
         'parent' => 'views_handler_field_node_link',
       ),
     ),

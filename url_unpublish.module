@@ -20,6 +20,15 @@ function url_unpublish_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  $items['url_publish/%node'] = array(
+    'title'            => 'Publish Node',
+    'description'      => 'Publish Node by Nid',
+    'page callback'    => 'url_publish_save_destination',
+    'page arguments'   => array(1),
+    'access arguments' => array('publish nodes'),
+    'type'             => MENU_CALLBACK,
+  );
+
   return $items;
 }
 
@@ -27,7 +36,16 @@ function url_unpublish_menu() {
 * Implements hook_permission().
 */
 function url_unpublish_permission() {
-  return array('unpublish nodes' => array('title' => 'Unpublish Nodes'));
+  return array(
+    'unpublish nodes' => array(
+      'title'       => t('Unpublish Nodes'),
+      'description' => t('Allows the ability to unplublish nodes via a URL (url_unpublish/%nid).'),
+    ),
+    'publish nodes' => array(
+      'title'       => t('Publish Nodes'),
+      'description' => t('Allows the ability to plublish nodes via a URL (url_publish/%nid).'),
+    ),
+  );
 }
 
 /**
@@ -46,16 +64,30 @@ function url_unpublish_views_api() {
 function url_unpublish_autoload_info() {
   return array (
     'views_handler_field_node_link_unpublish' => 'views/views_handler_field_node_link_unpublish.inc',
+    'views_handler_field_node_link_publish' => 'views/views_handler_field_node_link_publish.inc',
   );
 }
 
 /**
- * Check permission and send to confirm page.
+ * Unpublish - check permission and send to confirm page.
  */
 function url_unpublish_save_destination($node) {
   if (user_access('unpublish nodes')) {
     $_SESSION['url_unpublish_destination'] = $_SERVER['HTTP_REFERER'];
     return backdrop_get_form('url_unpublish_confirm', $node);
+  }
+  else {
+    backdrop_access_denied();
+  }
+}
+
+/**
+ * Publish - check permission and send to confirm page.
+ */
+function url_publish_save_destination($node) {
+  if (user_access('publish nodes')) {
+    $_SESSION['url_publish_destination'] = $_SERVER['HTTP_REFERER'];
+    return backdrop_get_form('url_publish_confirm', $node);
   }
   else {
     backdrop_access_denied();
@@ -71,8 +103,22 @@ function url_unpublish_confirm($form, $form_state, $node) {
     t('Are you sure you want to unpublish %node-title?', array(
       '%node-title' => $node->title)),
     $_SESSION['url_unpublish_destination'],
-    t('This action cannot be undone.'),
+    (user_access('publish nodes') ? t('This action can be undone.') : t('This action cannot be undone.')),
     t('Unpublish'),
+    t('Cancel')
+  );
+}
+
+/**
+ * Provide a form to confirm the publish action.
+ */
+function url_publish_confirm($form, $form_state, $node) {
+  $form['#node'] = $node;
+  return confirm_form($form,
+    t('Are you sure you want to publish this %node-title?', array('%node-title' => $node->title)),
+    $_SESSION['url_publish_destination'],
+    (user_access('unpublish nodes') ? t('This action can be undone.') : t('This action cannot be undone.')),
+    t('Publish'),
     t('Cancel')
   );
 }
@@ -87,5 +133,17 @@ function url_unpublish_confirm_submit($form, &$form_state) {
     node_save($node);
   }
 
+  backdrop_goto('<front>');
+}
+
+/**
+ * Confirm the publish action.
+ */
+function url_publish_confirm_submit($form, &$form_state) {
+  $node = $form['#node'];
+  if ($form_state['values']['confirm']) {
+    $node->status = 1;
+    node_save($node);
+  }
   backdrop_goto('<front>');
 }
