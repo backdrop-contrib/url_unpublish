@@ -1,5 +1,10 @@
-name = Url Unpublish
-description = Unpublish nodes through URL parameter
+name = Url Publish and Unpublish
+description = Publish and Unpublish nodes through URL parameters
 backdrop = 1.x
 type = module
-package = Other
+
+package = Administration
+tags[] = Views
+tags[] = Content
+tags[] = Content Management
+tags[] = Publish
