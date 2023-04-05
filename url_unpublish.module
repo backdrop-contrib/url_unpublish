@@ -31,6 +31,25 @@ function url_unpublish_permission() {
 }
 
 /**
+* Implements hook_views_api().
+*/
+function url_unpublish_views_api() {
+  return array(
+    'api' => 3,
+    'path' => backdrop_get_path('module', 'url_unpublish') . '/views',
+  );
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function url_unpublish_autoload_info() {
+  return array (
+    'views_handler_field_node_link_unpublish' => 'views/views_handler_field_node_link_unpublish.inc',
+  );
+}
+
+/**
  * Check permission and send to confirm page.
  */
 function url_unpublish_save_destination($node) {
