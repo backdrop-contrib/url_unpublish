@@ -1,5 +1,5 @@
-;$Id
 name = Url Unpublish
-description = unpublish nodes through url parameter
-core = 7.x
+description = Unpublish nodes through URL parameter
+backdrop = 1.x
+type = module
 package = Other

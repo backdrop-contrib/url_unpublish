@@ -1,4 +1,9 @@
 <?php
+/**
+ * @file
+ *
+ * Generate a URL to unpublish a node.
+ */
 
 /**
 * Implements hook_menu().
@@ -7,12 +12,12 @@ function url_unpublish_menu() {
   $items = array();
 
   $items['url_unpublish/%node'] = array(
-      'title' => 'Unpublish Node',
-      'description' => 'Unpublish Node by Nid',
-      'page callback' => 'url_unpublish_save_destination',
-      'page arguments' => array(1),
-      'access arguments' => array('unpublish nodes'),
-      'type' => MENU_CALLBACK,
+    'title' => 'Unpublish Node',
+    'description' => 'Unpublish Node by Nid',
+    'page callback' => 'url_unpublish_save_destination',
+    'page arguments' => array(1),
+    'access arguments' => array('unpublish nodes'),
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
@@ -25,21 +30,37 @@ function url_unpublish_permission() {
   return array('unpublish nodes' => array('title' => 'Unpublish Nodes'));
 }
 
+/**
+ * Check permission and send to confirm page.
+ */
 function url_unpublish_save_destination($node) {
   if (user_access('unpublish nodes')) {
     $_SESSION['url_unpublish_destination'] = $_SERVER['HTTP_REFERER'];
-    return drupal_get_form('url_unpublish_confirm', $node);
+    return backdrop_get_form('url_unpublish_confirm', $node);
   }
   else {
-    drupal_access_denied();
+    backdrop_access_denied();
   }
 }
 
+/**
+ * Provide a form to confirm the unpublish action.
+ */
 function url_unpublish_confirm($form, $form_state, $node) {
   $form['#node'] = $node;
-  return confirm_form($form, t('Are you sure you want to unpublish %node-title?', array('%node-title' => $node->title)), $_SESSION['url_unpublish_destination'], t('This action cannot be undone.'), t('Unpublish'), t('Cancel'));
+  return confirm_form($form,
+    t('Are you sure you want to unpublish %node-title?', array(
+      '%node-title' => $node->title)),
+    $_SESSION['url_unpublish_destination'],
+    t('This action cannot be undone.'),
+    t('Unpublish'),
+    t('Cancel')
+  );
 }
 
+/**
+ * Confirm the unpublish action.
+ */
 function url_unpublish_confirm_submit($form, &$form_state) {
   $node = $form['#node'];
   if ($form_state['values']['confirm']) {
@@ -47,5 +68,5 @@ function url_unpublish_confirm_submit($form, &$form_state) {
     node_save($node);
   }
 
-  drupal_goto('<front>');
+  backdrop_goto('<front>');
 }
