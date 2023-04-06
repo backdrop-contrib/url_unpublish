@@ -48,7 +48,7 @@ if not used).
 Link in template or block:
 - Simple link to unpublish node 15
 ```html
-   <a href="/url_unpublish/15'">Unpublish Node</a>
+   <a href="/url_unpublish/15">Unpublish Node</a>
 ```
 - Use more advanced dynamic functions to dynamically include the node ID.
 
