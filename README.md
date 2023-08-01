@@ -69,7 +69,7 @@ Issues
 Link to the repo's issue queue.
 -->
 
-Bugs and Feature Requests should be reported in the Issue Queue:
+Bugs and Feature Requests should be reported in the Issue Queue:  
 https://github.com/backdrop-contrib/url_unpublish/issues.
 
 Current Maintainers
