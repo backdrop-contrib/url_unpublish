@@ -39,11 +39,11 @@ function url_unpublish_permission() {
   return array(
     'unpublish nodes' => array(
       'title'       => t('Unpublish Nodes'),
-      'description' => t('Allows the ability to unplublish nodes via a URL (url_unpublish/%nid).'),
+      'description' => t('Allows the ability to unpublish nodes via a URL (url_unpublish/%nid).'),
     ),
     'publish nodes' => array(
       'title'       => t('Publish Nodes'),
-      'description' => t('Allows the ability to plublish nodes via a URL (url_publish/%nid).'),
+      'description' => t('Allows the ability to publish nodes via a URL (url_publish/%nid).'),
     ),
   );
 }
