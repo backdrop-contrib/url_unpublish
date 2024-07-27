@@ -3,6 +3,8 @@ description = Publish and Unpublish nodes through URL parameters
 backdrop = 1.x
 type = module
 
+maintainers[yorkshire-pudding] = Martin Price
+
 package = Administration
 tags[] = Views
 tags[] = Content
